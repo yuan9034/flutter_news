@@ -18,6 +18,7 @@ class NewsHomePageState extends State<NewsHomePage>
   var _bannerVisibility = true;
   TabController _tabController;
   NewsHomeArguments newsHomeArguments;
+  CategoryEntity _categoryEntity;
 
   @override
   void initState() {
@@ -34,7 +35,8 @@ class NewsHomePageState extends State<NewsHomePage>
     var response = await HttpUtil()
         .post(Config.getCategoryList, {"id": newsHomeArguments.id});
     if (response.statusCode == 200) {
-      return CategoryEntity().fromJson(response.data);
+      _categoryEntity = CategoryEntity().fromJson(response.data);
+      return _categoryEntity;
     } else {
       throw Exception("获取栏目失败");
     }
@@ -56,7 +58,8 @@ class NewsHomePageState extends State<NewsHomePage>
           IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
-                Navigator.pushNamed(context, Routes.searchNewsPage);
+                Navigator.pushNamed(context, Routes.searchNewsPage,
+                    arguments: _categoryEntity);
               },
               iconSize: 20)
         ],
