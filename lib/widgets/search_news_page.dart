@@ -72,11 +72,13 @@ class SearchNewsPageState extends State<SearchNewsPage> {
                   maxTime: DateTime.now(),
                   onCancel: () {
                     startTime = endTime = null;
-                  },
+                _getSearchNews();
+              },
                   onConfirm: (date) {
                     startTime = endTime =
                         "${date.year}-" + _twoDigits(date.month) +
                             "-${_twoDigits(date.day)}";
+                    _getSearchNews();
                   },
                   currentTime: DateTime.now(),
                   locale: LocaleType.zh);
