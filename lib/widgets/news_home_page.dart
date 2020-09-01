@@ -19,6 +19,7 @@ class NewsHomePageState extends State<NewsHomePage>
   TabController _tabController;
   NewsHomeArguments newsHomeArguments;
   CategoryEntity _categoryEntity;
+  int _tabIndex = 0;
 
   @override
   void initState() {
@@ -70,7 +71,9 @@ class NewsHomePageState extends State<NewsHomePage>
             if (data.hasData) {
               var categoryEntity = data.data as CategoryEntity;
               _tabController = TabController(
-                  length: categoryEntity.data.length, vsync: this);
+                  initialIndex: _tabIndex,
+                  length: categoryEntity.data.length,
+                  vsync: this);
               return Column(
                 children: [
                   _buildBanner(),
@@ -114,7 +117,7 @@ class NewsHomePageState extends State<NewsHomePage>
         alignment: Alignment.topLeft,
         height: 40,
         child: TabBar(
-          onTap: (tab) => {},
+          onTap: (tab) => {_tabIndex = tab},
           labelStyle: TextStyle(fontSize: 14, color: Colors.blue),
           unselectedLabelStyle: TextStyle(fontSize: 14, color: Colors.blue),
           isScrollable: true,
