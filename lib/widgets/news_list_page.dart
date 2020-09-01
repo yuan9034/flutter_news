@@ -17,7 +17,8 @@ class NewsListPage extends StatefulWidget {
   State<StatefulWidget> createState() => NewsListPageState();
 }
 
-class NewsListPageState extends State<NewsListPage> {
+class NewsListPageState extends State<NewsListPage>
+    with AutomaticKeepAliveClientMixin {
   var _refreshController = RefreshController(initialRefresh: true);
   NewsListRequestEntity newsListRequestEntity;
   List<NewsListResponseDataList> xList = List();
@@ -50,6 +51,7 @@ class NewsListPageState extends State<NewsListPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SmartRefresher(
         enablePullDown: true,
         enablePullUp: true,
@@ -70,4 +72,7 @@ class NewsListPageState extends State<NewsListPage> {
       itemCount: xList.length,
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

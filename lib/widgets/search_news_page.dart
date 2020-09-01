@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_news/common/Config.dart';
 import 'package:flutter_news/model/category_entity.dart';
 import 'package:flutter_news/model/news_list_response_entity.dart';
@@ -20,6 +21,8 @@ class SearchNewsPageState extends State<SearchNewsPage> {
   var news = List<NewsListResponseDataList>();
   CategoryEntity _categoryEntity;
   TextEditingController textEditingController;
+  String startTime;
+  String endTime;
 
   @override
   void initState() {
@@ -63,7 +66,20 @@ class SearchNewsPageState extends State<SearchNewsPage> {
         actions: [
           GestureDetector(
             onTap: () {
-              print("日期");
+              DatePicker.showDatePicker(context,
+                  showTitleActions: true,
+                  minTime: DateTime(2010, 1, 1),
+                  maxTime: DateTime.now(),
+                  onCancel: () {
+                    startTime = endTime = null;
+                  },
+                  onConfirm: (date) {
+                    startTime = endTime =
+                        "${date.year}-" + _twoDigits(date.month) +
+                            "-${_twoDigits(date.day)}";
+                  },
+                  currentTime: DateTime.now(),
+                  locale: LocaleType.zh);
             },
             child: Container(
               padding: EdgeInsets.only(right: 16),
@@ -96,12 +112,14 @@ class SearchNewsPageState extends State<SearchNewsPage> {
     });
     searchNewsEntity.colIds = colIds;
     searchNewsEntity.searchKey = textEditingController.text;
+    searchNewsEntity.startTime = startTime;
+    searchNewsEntity.endTime = endTime;
     try {
       var post = await HttpUtil()
           .post(Config.searchArticle, searchNewsEntity.toJson());
       if (post.statusCode == 200) {
         var newsListResponseEntity =
-            NewsListResponseEntity().fromJson(post.data);
+        NewsListResponseEntity().fromJson(post.data);
         news = newsListResponseEntity.data.xList;
       }
     } on DioError catch (e) {
@@ -114,5 +132,10 @@ class SearchNewsPageState extends State<SearchNewsPage> {
     refreshController.refreshCompleted();
     refreshController.loadComplete();
     setState(() {});
+  }
+
+  String _twoDigits(int n) {
+    if (n >= 10) return "${n}";
+    return "0${n}";
   }
 }
