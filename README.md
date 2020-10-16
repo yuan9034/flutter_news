@@ -1,6 +1,6 @@
 # flutter_news
 
-警务新闻flutter版本
+新闻flutter版本
 
 ## Getting Started
 
